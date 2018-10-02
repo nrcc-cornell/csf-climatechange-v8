@@ -1,0 +1,61 @@
+/*
+///////////////////////////////////////////////////////////////////////////////
+//
+// Climate Smart Farming Climate Change in Your County
+// Copyright (c) 2018 Cornell Institute for Climate Smart Solutions
+// All Rights Reserved
+//
+// This software is published under the provisions of the GNU General Public
+// License <http://www.gnu.org/licenses/>. A text copy of the license can be
+// found in the file 'LICENSE' included with this software.
+//
+// A text copy of the copyright notice, licensing conditions and disclaimers
+// is available in the file 'COPYRIGHT' included with this software.
+//
+///////////////////////////////////////////////////////////////////////////////
+*/
+
+    .base-div {
+        font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        //margin: 0px 0px 16px 0px;
+        margin: 0px 0px 0px 10px;
+        font-weight: bold;
+    }
+
+    .base-label {
+        //margin: 10px 0px 10px 8px;
+        margin: 2px 0px 2px 8px;
+        //font-size: 18px;
+        font-size: 16px;
+    }
+
+    .select-div {
+        margin: 0px 0px 0px 14px;
+        width: 140px;
+        font-size: 14px;
+    }
+
+  .Select-control {
+    height: 20px;
+    width: 70px;
+    border: 2px solid #006600;
+    //background: #4ca20b;
+    background: rgba(76,162,11,0.1);
+
+    .Select-placeholder {
+      line-height: 16px;
+    }
+
+    .Select-value {
+      line-height: 16px !important;
+
+      .Select-value-label {
+        line-height: 16px;
+      }
+    }
+
+    .Select-input {
+      height: 16px;
+    }
+  }
+

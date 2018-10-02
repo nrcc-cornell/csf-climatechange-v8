@@ -1,0 +1,40 @@
+{
+  "name": "csf-climatechange",
+  "version": "0.6.0",
+  "homepage": "https://cicss.github.io/csf-climatechange",
+  "private": true,
+  "devDependencies": {
+    "custom-react-scripts": "0.2.2"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "highcharts": "^6.1.0",
+    "highcharts-exporting": "^0.1.7",
+    "highcharts-more": "^0.1.7",
+    "jStat": "^1.7.1",
+    "jquery": "^3.3.1",
+    "jquery-ui": "^1.12.1",
+    "jsonp": "^0.2.1",
+    "leaflet": "^1.3.1",
+    "mobx": "^4.3.0",
+    "mobx-react": "^5.1.2",
+    "moment": "^2.22.2",
+    "rc-slider": "^8.6.1",
+    "react": "^16.4.0",
+    "react-accessible-accordion": "^2.4.4",
+    "react-async-script-loader": "^0.3.0",
+    "react-dom": "^16.4.0",
+    "react-highcharts": "^16.0.2",
+    "react-icons-kit": "^1.1.5",
+    "react-leaflet": "^1.9.1",
+    "react-leaflet-control": "^1.4.1",
+    "react-loader-advanced": "^1.7.1",
+    "react-select": "^1.2.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
