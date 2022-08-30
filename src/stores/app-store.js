@@ -724,7 +724,7 @@ export class AppStore {
     };
 
     return axios
-      .post("http://grid2.rcc-acis.org/GridData", params)
+      .post("https://grid2.rcc-acis.org/GridData", params)
       .then(res => {
         //console.log('successful download of livneh data 1950-2010');
         let data = {}
@@ -963,7 +963,7 @@ export class AppStore {
     };
 
     return axios
-      .post("http://grid2.rcc-acis.org/GridData", params)
+      .post("https://grid2.rcc-acis.org/GridData", params)
       .then(res => {
         console.log('successful download of projection data : ' + scen + ' ' + re + ' 1950-2100');
         let data = {}
