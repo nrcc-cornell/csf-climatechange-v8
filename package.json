@@ -1,7 +1,7 @@
 {
   "name": "csf-climatechange",
   "version": "0.7.0",
-  "homepage": "https://pages.github.coecis.cornell.edu/be99/csf-climatechange-v0.7",
+  "homepage": "https://nrcc-cornell.github.io/csf-climatechange-v7/",
   "private": true,
   "devDependencies": {
     "custom-react-scripts": "0.2.2",
