@@ -18,6 +18,7 @@ import { observable, computed, action } from 'mobx';
 import axios from "axios";
 import jsonp from 'jsonp';
 //import moment from 'moment';
+import JSZip from 'jszip';
 
 import livneh_stats_1950_2013 from '../data/livneh-stats-1950-2013.json';
 import livneh_stats_1980_2013 from '../data/livneh-stats-1980-2013.json';
@@ -829,18 +830,31 @@ export class AppStore {
 
     @action loadProjectionsGdd_1950_2100 = (county_fips,gdd_base) => {
             if (this.getLoaderProjections === false) { this.updateLoaderProjections(true); }
-            const url = 'http://tools.climatesmartfarming.org/changetool/data-change?fips='+county_fips+'&gdd_base='+gdd_base
-            jsonp(url, null, (err,data) => {
-                if (err) {
-                    console.error(err.message);
-                    return
-                } else {
+            fetch(`data/gdd/${county_fips}/${gdd_base}.zip`)
+                .then(res => res.blob())
+                .then(blob => JSZip.loadAsync(blob))
+                .then(zip => zip.file(`${gdd_base}.json`).async("text"))
+                .then(strContents => JSON.parse(strContents))
+                .then(data => {
                     console.log('DOWNLOADED GDD PROJECTIONS COMPLETE');
                     this.updateGddProjectionData(data);
                     if (this.getLoaderProjections === true) { this.updateLoaderProjections(false); }
-                    return
-                }
-            });
+                });
+
+            // OLD VERSION: Retained in case of new version (above) failure
+            // if (this.getLoaderProjections === false) { this.updateLoaderProjections(true); }
+            // const url = 'http://tools.climatesmartfarming.org/changetool/data-change?fips='+county_fips+'&gdd_base='+gdd_base
+            // jsonp(url, null, (err,data) => {
+            //     if (err) {
+            //         console.error(err.message);
+            //         return
+            //     } else {
+            //         console.log('DOWNLOADED GDD PROJECTIONS COMPLETE');
+            //         this.updateGddProjectionData(data);
+            //         if (this.getLoaderProjections === true) { this.updateLoaderProjections(false); }
+            //         return
+            //     }
+            // });
         }
 
     // store downloaded season length observation data
@@ -864,36 +878,65 @@ export class AppStore {
         }
 
     @action loadObservationsSeasonLength_1950_2100 = (county_fips,season_threshold) => {
-            if (this.getLoaderSeasonLengthData === false) { this.updateLoaderSeasonLengthData(true); }
-            const url = 'http://tools.climatesmartfarming.org/changetool/season-length-obs?fips='+county_fips+'&season_threshold='+season_threshold
-            jsonp(url, null, (err,data) => {
-                if (err) {
-                    console.error(err.message);
-                    return
-                } else {
-                    console.log('DOWNLOADED SEASON LENGTH OBSERVATIONS COMPLETE');
-                    this.updateSeasonLengthObservationData(data);
-                    if (this.getLoaderSeasonLengthData === true) { this.updateLoaderSeasonLengthData(false); }
-                    return
-                }
+        if (this.getLoaderSeasonLengthData === false) { this.updateLoaderSeasonLengthData(true); }
+        fetch(`data/seasonObs/${county_fips}.zip`)
+            .then(res => res.blob())
+            .then(blob => JSZip.loadAsync(blob))
+            .then(zip => zip.file(`${county_fips}.json`).async("text"))
+            .then(strContents => JSON.parse(strContents))
+            .then(data => {
+                console.log('DOWNLOADED SEASON LENGTH OBSERVATIONS COMPLETE');
+                this.updateSeasonLengthObservationData(data['gt' + season_threshold]);
+                if (this.getLoaderSeasonLengthData === true) { this.updateLoaderSeasonLengthData(false); }
             });
-        }
+        
+        
+            
+        // OLD VERSION: Retained in case of new version (above) failure
+        // if (this.getLoaderSeasonLengthData === false) { this.updateLoaderSeasonLengthData(true); }
+        // const url = 'http://tools.climatesmartfarming.org/changetool/season-length-obs?fips='+county_fips+'&season_threshold='+season_threshold
+        // jsonp(url, null, (err,data) => {
+        //     if (err) {
+        //         console.error(err.message);
+        //         return
+        //     } else {
+        //         console.log('DOWNLOADED SEASON LENGTH OBSERVATIONS COMPLETE');
+        //         this.updateSeasonLengthObservationData(data);
+        //         if (this.getLoaderSeasonLengthData === true) { this.updateLoaderSeasonLengthData(false); }
+        //         return
+        //     }
+        // });
+    }
 
     @action loadProjectionsSeasonLength_1950_2100 = (county_fips,season_threshold) => {
-            if (this.getLoaderProjections === false) { this.updateLoaderProjections(true); }
-            const url = 'http://tools.climatesmartfarming.org/changetool/season-length-proj?fips='+county_fips+'&season_threshold='+season_threshold
-            jsonp(url, null, (err,data) => {
-                if (err) {
-                    console.error(err.message);
-                    return
-                } else {
-                    console.log('DOWNLOADED SEASON LENGTH PROJECTIONS COMPLETE');
-                    this.updateSeasonLengthProjectionData(data);
-                    if (this.getLoaderProjections === true) { this.updateLoaderProjections(false); }
-                    return
-                }
+        if (this.getLoaderProjections === false) { this.updateLoaderProjections(true); }
+        fetch(`data/seasonProj/${county_fips}.zip`)
+            .then(res => res.blob())
+            .then(blob => JSZip.loadAsync(blob))
+            .then(zip => zip.file(`${county_fips}.json`).async("text"))
+            .then(strContents => JSON.parse(strContents))
+            .then(data => {
+                console.log('DOWNLOADED SEASON LENGTH PROJECTIONS COMPLETE');
+                this.updateSeasonLengthProjectionData(data['gt' + season_threshold]);
+                if (this.getLoaderProjections === true) { this.updateLoaderProjections(false); }
             });
-        }
+        
+        
+        // OLD VERSION: Retained in case of new version (above) failure
+        // if (this.getLoaderProjections === false) { this.updateLoaderProjections(true); }
+        // const url = 'http://tools.climatesmartfarming.org/changetool/season-length-proj?fips='+county_fips+'&season_threshold='+season_threshold
+        // jsonp(url, null, (err,data) => {
+        //     if (err) {
+        //         console.error(err.message);
+        //         return
+        //     } else {
+        //         console.log('DOWNLOADED SEASON LENGTH PROJECTIONS COMPLETE');
+        //         this.updateSeasonLengthProjectionData(data);
+        //         if (this.getLoaderProjections === true) { this.updateLoaderProjections(false); }
+        //         return
+        //     }
+        // });
+    }
 
   @action loadProjections_1950_2100 = (id,scen,re) => {
 
