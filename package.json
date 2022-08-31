@@ -4,8 +4,9 @@
   "homepage": "https://nrcc-cornell.github.io/csf-climatechange-v7/",
   "private": true,
   "devDependencies": {
-    "custom-react-scripts": "0.2.2",
-    "gh-pages": "^2.0.0"
+    "custom-react-scripts": "^0.2.2",
+    "gh-pages": "^2.0.0",
+    "rewire": "^4.0.1"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -35,7 +36,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "node ./scripts/build.js",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "test": "react-scripts test --env=jsdom",

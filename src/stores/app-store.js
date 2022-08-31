@@ -830,7 +830,7 @@ export class AppStore {
 
     @action loadProjectionsGdd_1950_2100 = (county_fips,gdd_base) => {
             if (this.getLoaderProjections === false) { this.updateLoaderProjections(true); }
-            fetch(`data/gdd/${county_fips}/${gdd_base}.zip`)
+            fetch(`https://nrcc-cornell.github.io/csf-climatechange-v7/data/gdd/${county_fips}/${gdd_base}.zip`)
                 .then(res => res.blob())
                 .then(blob => JSZip.loadAsync(blob))
                 .then(zip => zip.file(`${gdd_base}.json`).async("text"))
@@ -879,7 +879,7 @@ export class AppStore {
 
     @action loadObservationsSeasonLength_1950_2100 = (county_fips,season_threshold) => {
         if (this.getLoaderSeasonLengthData === false) { this.updateLoaderSeasonLengthData(true); }
-        fetch(`data/seasonObs/${county_fips}.zip`)
+        fetch(`https://nrcc-cornell.github.io/csf-climatechange-v7/data/seasonObs/${county_fips}.zip`)
             .then(res => res.blob())
             .then(blob => JSZip.loadAsync(blob))
             .then(zip => zip.file(`${county_fips}.json`).async("text"))
@@ -910,7 +910,7 @@ export class AppStore {
 
     @action loadProjectionsSeasonLength_1950_2100 = (county_fips,season_threshold) => {
         if (this.getLoaderProjections === false) { this.updateLoaderProjections(true); }
-        fetch(`data/seasonProj/${county_fips}.zip`)
+        fetch(`https://nrcc-cornell.github.io/csf-climatechange-v7/data/seasonProj/${county_fips}.zip`)
             .then(res => res.blob())
             .then(blob => JSZip.loadAsync(blob))
             .then(zip => zip.file(`${county_fips}.json`).async("text"))
