@@ -47,18 +47,26 @@ class ProjectionCheckbox extends Component {
                 <form>
                   <div className="radio">
                     <label>
-                      <input type="radio" value="rcp85"
-                          checked={this.props.store.app.getModelScenario === "rcp85"}
+                      <input type="radio" value="ssp585"
+                          checked={this.props.store.app.getModelScenario === "ssp585"}
+                          onChange={this.props.store.app.updateModelScenario} />
+                      <span>very high emissions</span>
+                    </label>
+                  </div>
+                  <div className="radio">
+                    <label>
+                      <input type="radio" value="ssp370"
+                          checked={this.props.store.app.getModelScenario === "ssp370"}
                           onChange={this.props.store.app.updateModelScenario} />
                       <span>high emissions</span>
                     </label>
                   </div>
                   <div className="radio">
                     <label>
-                      <input type="radio" value="rcp45"
-                          checked={this.props.store.app.getModelScenario === "rcp45"}
+                      <input type="radio" value="ssp245"
+                          checked={this.props.store.app.getModelScenario === "ssp245"}
                           onChange={this.props.store.app.updateModelScenario} />
-                      <span>low emissions</span>
+                      <span>intermediate emissions</span>
                     </label>
                   </div>
                 </form>
