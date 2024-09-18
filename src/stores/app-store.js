@@ -16,15 +16,14 @@
 import React from 'react';
 import { observable, computed, action } from 'mobx';
 import axios from "axios";
-import jsonp from 'jsonp';
 //import moment from 'moment';
 import JSZip from 'jszip';
 
-import livneh_stats_1950_2013 from '../data/livneh-stats-1950-2013.json';
-import livneh_stats_1980_2013 from '../data/livneh-stats-1980-2013.json';
 import ncei_clim_stats_1951_2023 from '../data/ncei-clim-stats-1951-2023.json';
 import ncei_clim_stats_1980_2023 from '../data/ncei-clim-stats-1980-2023.json';
 import county_geojson from '../data/ne_county_with_fips.json';
+
+// const URL_BASE = 'https://nrcc-cornell.github.io/csf-climatechange-v8/data';
 
 export class AppStore {
     // -----------------------------------------------------------------------------------------
@@ -117,7 +116,6 @@ export class AppStore {
     //@observable display_series = 'gddGrowingSeason';
     @observable display_series = 'avgtGrowingSeason';
     @action updateDisplaySeries = (changeEvent) => {
-        //console.log(changeEvent.target.value);
         if (changeEvent.target.value === 'seasonLength') {
             this.loadObservationsSeasonLength(this.getCountyFips)
         }
@@ -141,7 +139,6 @@ export class AppStore {
     // -----------------------------------------------------------------------------------
     @observable projection_view = false;
     @action updateProjectionView = (changeEvent) => {
-        console.log(changeEvent.target.checked);
         this.projection_view = changeEvent.target.checked
     };
     @action updateProjectionViewFromAccordion = () => {
@@ -337,8 +334,7 @@ export class AppStore {
         
         // use trends from 1980-2023 to calculate legend thresholds. We will keep thresholds consistent between periods
         //let vList = Object.values(this.getTrends[keyForVar[this.getDisplaySeries]]['slope']);
-        const whichFile = this.getDisplaySeries === 'seasonLength' ? 'livneh' : 'ncei_clim';
-        let vList = Object.values(this.getTrendsFor1980_2023[whichFile][keyForVar[this.getDisplaySeries]]['slope']);
+        let vList = Object.values(this.getTrendsFor1980_2023[keyForVar[this.getDisplaySeries]]['slope']);
         let maxValue = Math.max(...vList);
         let minValue = Math.min(...vList);
         maxValue = Math.max( Math.abs(maxValue), Math.abs(minValue) );
@@ -459,29 +455,28 @@ export class AppStore {
         }
     @computed get getTrends() {
             if (this.getTrendStartYear==='1951') {
-                return {livneh: livneh_stats_1950_2013, ncei_clim: ncei_clim_stats_1951_2023}
+                return ncei_clim_stats_1951_2023
             } else if (this.getTrendStartYear==='1980') {
-                return {livneh: livneh_stats_1980_2013, ncei_clim: ncei_clim_stats_1980_2023}
+                return ncei_clim_stats_1980_2023
             } else {
                 return null
             }
         }
 
     @computed get getTrendsFor1951_2023() {
-            return {livneh: livneh_stats_1950_2013, ncei_clim: ncei_clim_stats_1951_2023}
+            return ncei_clim_stats_1951_2023
         }
 
     @computed get getTrendsFor1980_2023() {
-            return {livneh: livneh_stats_1980_2013, ncei_clim: ncei_clim_stats_1980_2023}
+            return ncei_clim_stats_1980_2023
         }
 
     findTrendForFips = (fips) => {
 
         let keyForVar = this.getKeyForVar()
         
-        const whichFile = this.getDisplaySeries === 'seasonLength' ? 'livneh' : 'ncei_clim';
-        if (this.getTrends[whichFile][keyForVar[this.getDisplaySeries]]['slope'].hasOwnProperty(fips)) {
-            return this.getTrends[whichFile][keyForVar[this.getDisplaySeries]]['slope'][fips]
+        if (this.getTrends[keyForVar[this.getDisplaySeries]]['slope'].hasOwnProperty(fips)) {
+            return this.getTrends[keyForVar[this.getDisplaySeries]]['slope'][fips]
         } else {
             return 0.0
         }
@@ -491,9 +486,8 @@ export class AppStore {
 
         let keyForVar = this.getKeyForVar()
     
-        const whichFile = this.getDisplaySeries === 'seasonLength' ? 'livneh' : 'ncei_clim';
-        if (this.getTrendsFor1951_2023[whichFile][keyForVar[this.getDisplaySeries]]['slope'].hasOwnProperty(fips)) {
-            return this.getTrendsFor1951_2023[whichFile][keyForVar[this.getDisplaySeries]]['slope'][fips]
+        if (this.getTrendsFor1951_2023[keyForVar[this.getDisplaySeries]]['slope'].hasOwnProperty(fips)) {
+            return this.getTrendsFor1951_2023[keyForVar[this.getDisplaySeries]]['slope'][fips]
         } else {
             return 0.0
         }
@@ -503,9 +497,8 @@ export class AppStore {
 
         let keyForVar = this.getKeyForVar()
     
-        const whichFile = this.getDisplaySeries === 'seasonLength' ? 'livneh' : 'ncei_clim';
-        if (this.getTrendsFor1980_2023[whichFile][keyForVar[this.getDisplaySeries]]['slope'].hasOwnProperty(fips)) {
-            return this.getTrendsFor1980_2023[whichFile][keyForVar[this.getDisplaySeries]]['slope'][fips]
+        if (this.getTrendsFor1980_2023[keyForVar[this.getDisplaySeries]]['slope'].hasOwnProperty(fips)) {
+            return this.getTrendsFor1980_2023[keyForVar[this.getDisplaySeries]]['slope'][fips]
         } else {
             return 0.0
         }
@@ -515,9 +508,8 @@ export class AppStore {
 
         let keyForVar = this.getKeyForVar()
 
-        const whichFile = this.getDisplaySeries === 'seasonLength' ? 'livneh' : 'ncei_clim';
-        if (this.getTrends[whichFile][keyForVar[this.getDisplaySeries]]['pvalue'].hasOwnProperty(fips)) {
-            return this.getTrends[whichFile][keyForVar[this.getDisplaySeries]]['pvalue'][fips]
+        if (this.getTrends[keyForVar[this.getDisplaySeries]]['pvalue'].hasOwnProperty(fips)) {
+            return this.getTrends[keyForVar[this.getDisplaySeries]]['pvalue'][fips]
         } else {
             return 1.0
         }
@@ -527,9 +519,8 @@ export class AppStore {
 
         let keyForVar = this.getKeyForVar()
 
-        const whichFile = this.getDisplaySeries === 'seasonLength' ? 'livneh' : 'ncei_clim';
-        if (this.getTrendsFor1951_2023[whichFile][keyForVar[this.getDisplaySeries]]['pvalue'].hasOwnProperty(fips)) {
-            return this.getTrendsFor1951_2023[whichFile][keyForVar[this.getDisplaySeries]]['pvalue'][fips]
+        if (this.getTrendsFor1951_2023[keyForVar[this.getDisplaySeries]]['pvalue'].hasOwnProperty(fips)) {
+            return this.getTrendsFor1951_2023[keyForVar[this.getDisplaySeries]]['pvalue'][fips]
         } else {
             return 1.0
         }
@@ -539,9 +530,8 @@ export class AppStore {
 
         let keyForVar = this.getKeyForVar()
 
-        const whichFile = this.getDisplaySeries === 'seasonLength' ? 'livneh' : 'ncei_clim';
-        if (this.getTrendsFor1980_2023[whichFile][keyForVar[this.getDisplaySeries]]['pvalue'].hasOwnProperty(fips)) {
-            return this.getTrendsFor1980_2023[whichFile][keyForVar[this.getDisplaySeries]]['pvalue'][fips]
+        if (this.getTrendsFor1980_2023[keyForVar[this.getDisplaySeries]]['pvalue'].hasOwnProperty(fips)) {
+            return this.getTrendsFor1980_2023[keyForVar[this.getDisplaySeries]]['pvalue'][fips]
         } else {
             return 1.0
         }
@@ -741,7 +731,6 @@ export class AppStore {
     return axios
       .post("https://grid2.rcc-acis.org/GridData", params)
       .then(res => {
-        //console.log('successful download of livneh data 1951-2023');
         let data = {}
         data['years'] = []
         //data['seasonLength'] = []
@@ -775,7 +764,7 @@ export class AppStore {
         if (this.getLoaderData === true) { this.updateLoaderData(false); }
       })
       .catch(err => {
-        console.log("Failed to load livneh data 1951-2023 ", err);
+        console.log("Failed to load ncei-clim data 1951-2023 ", err);
       });
   }
 
@@ -855,9 +844,9 @@ export class AppStore {
             return this.gdd_projection_data
         }
 
-    @action loadProjectionsGdd_1950_2100 = (county_fips,gdd_base) => {
+    @action loadProjectionsGdd_1951_2099 = (county_fips,gdd_base) => {
             if (this.getLoaderProjections === false) { this.updateLoaderProjections(true); }
-            fetch(`https://nrcc-cornell.github.io/csf-climatechange-v8/data/gdd/${county_fips}/${gdd_base}.zip`)
+            fetch(`./data/gdd/${county_fips}/${gdd_base}.zip`)
                 .then(res => res.blob())
                 .then(blob => JSZip.loadAsync(blob))
                 .then(zip => zip.file(`${gdd_base}.json`).async("text"))
@@ -909,7 +898,7 @@ export class AppStore {
 
     @action loadObservationsSeasonLength_1950_2100 = (county_fips,season_threshold) => {
         if (this.getLoaderSeasonLengthData === false) { this.updateLoaderSeasonLengthData(true); }
-        fetch(`https://nrcc-cornell.github.io/csf-climatechange-v8/data/seasonObs/${county_fips}.zip`)
+        fetch(`./data/seasonObs/${county_fips}.zip`)
             .then(res => res.blob())
             .then(blob => JSZip.loadAsync(blob))
             .then(zip => zip.file(`${county_fips}.json`).async("text"))
@@ -940,7 +929,7 @@ export class AppStore {
 
     @action loadProjectionsSeasonLength_1950_2100 = (county_fips,season_threshold) => {
         if (this.getLoaderProjections === false) { this.updateLoaderProjections(true); }
-        fetch(`https://nrcc-cornell.github.io/csf-climatechange-v8/data/seasonProj/${county_fips}.zip`)
+        fetch(`./data/seasonProj/${county_fips}.zip`)
             .then(res => res.blob())
             .then(blob => JSZip.loadAsync(blob))
             .then(zip => zip.file(`${county_fips}.json`).async("text"))
@@ -968,7 +957,7 @@ export class AppStore {
         // });
     }
 
-  @action loadProjections_1950_2100 = (id,scen,re) => {
+  @action loadProjections_1951_2099 = (id,scen,re) => {
 
     if (this.getLoaderProjections === false) { this.updateLoaderProjections(true); }
     let varReduce = ''
@@ -995,7 +984,7 @@ export class AppStore {
     return axios
       .post("https://grid2.rcc-acis.org/GridData", params)
       .then(res => {
-        console.log('successful download of projection data : ' + scen + ' ' + re + ' 1950-2100');
+        console.log('successful download of projection data : ' + scen + ' ' + re + ' 1951-2099');
         let data = {}
         data['years'] = []
         //data['gddGrowingSeason'] = []
@@ -1019,7 +1008,7 @@ export class AppStore {
         if (this.getLoaderProjections === true) { this.updateLoaderProjections(false); }
       })
       .catch(err => {
-        console.log("Failed to load projection data 1950-2100 ", err);
+        console.log("Failed to load projection data 1951-2099 ", err);
       });
   }
 
@@ -1032,7 +1021,7 @@ export class AppStore {
     }
 
     @action loadProjectionsGdd = (id) => {
-        this.loadProjectionsGdd_1950_2100(id,this.getGddBase);
+        this.loadProjectionsGdd_1951_2099(id,this.getGddBase);
     }
 
     @action loadProjections = (id) => {
@@ -1040,16 +1029,16 @@ export class AppStore {
         this.emptyGddProjectionData()
         this.emptyProjectionData()
         this.loadProjectionsSeasonLength_1950_2100(id,this.getSeasonThreshold);
-        this.loadProjectionsGdd_1950_2100(id,this.getGddBase);
-        this.loadProjections_1950_2100(id,'ssp585','mean');
-        this.loadProjections_1950_2100(id,'ssp585','max');
-        this.loadProjections_1950_2100(id,'ssp585','min');
-        this.loadProjections_1950_2100(id,'ssp370','mean');
-        this.loadProjections_1950_2100(id,'ssp370','max');
-        this.loadProjections_1950_2100(id,'ssp370','min');
-        this.loadProjections_1950_2100(id,'ssp245','mean');
-        this.loadProjections_1950_2100(id,'ssp245','max');
-        this.loadProjections_1950_2100(id,'ssp245','min');
+        this.loadProjectionsGdd_1951_2099(id,this.getGddBase);
+        this.loadProjections_1951_2099(id,'ssp585','mean');
+        this.loadProjections_1951_2099(id,'ssp585','max');
+        this.loadProjections_1951_2099(id,'ssp585','min');
+        this.loadProjections_1951_2099(id,'ssp370','mean');
+        this.loadProjections_1951_2099(id,'ssp370','max');
+        this.loadProjections_1951_2099(id,'ssp370','min');
+        this.loadProjections_1951_2099(id,'ssp245','mean');
+        this.loadProjections_1951_2099(id,'ssp245','max');
+        this.loadProjections_1951_2099(id,'ssp245','min');
     }
 
     constructor() {
