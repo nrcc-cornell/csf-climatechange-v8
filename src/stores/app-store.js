@@ -102,7 +102,7 @@ export class AppStore {
                    <i>(2) High Emissions</i>: This scenario is in the upper-middle part of the full range of scenarios. It assumes current additional climate policy. This is also known as the SSP370 scenario, as defined by the Intergovernmental Panel on Climate Change (IPCC).
                </p>
                <p>
-                   <i>(1) Low Emissions</i>:  Under this scenario, greenhouse gas emissions gradually shift toward lower levels. This is the current SSP245 emissions scenario as defined by the IPCC.  It was previously referred to as the RCP4.5 scenario.
+                   <i>(1) Intermediate Emissions</i>:  Under this scenario, greenhouse gas emissions gradually shift toward lower levels. This is the current SSP245 emissions scenario as defined by the IPCC.  It was previously referred to as the RCP4.5 scenario.
                </p>
                <p>
                Livneh, B., E. A. Rosenberg, C. Lin, B. Nijssen, V. Mishra, K. M. Andreadis, E. P. Maurer, and D. P. Lettenmaier (2013), A long-term hydrologically based dataset of land surface fluxes and states for the conterminous United States: Update and extensions, J. Clim., 26(23), 9384–9392, doi 10.1175/JCLI-D-12-00508.1.
