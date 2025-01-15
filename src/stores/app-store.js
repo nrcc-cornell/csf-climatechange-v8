@@ -16,13 +16,14 @@
 import React from 'react';
 import { observable, computed, action } from 'mobx';
 import axios from "axios";
-import jsonp from 'jsonp';
 //import moment from 'moment';
 import JSZip from 'jszip';
 
-import livneh_stats_1950_2013 from '../data/livneh-stats-1950-2013.json';
-import livneh_stats_1980_2013 from '../data/livneh-stats-1980-2013.json';
+import ncei_clim_stats_1951_2023 from '../data/ncei-clim-stats-1951-2023.json';
+import ncei_clim_stats_1980_2023 from '../data/ncei-clim-stats-1980-2023.json';
 import county_geojson from '../data/ne_county_with_fips.json';
+
+// const URL_BASE = 'https://nrcc-cornell.github.io/csf-climatechange-v8/data';
 
 export class AppStore {
     // -----------------------------------------------------------------------------------------
@@ -75,7 +76,33 @@ export class AppStore {
                </p>
                <h4><br/>&bull; OBSERVED DATA</h4>
                <p>
-               This tool uses data observed at weather stations from 1950-2013, interpolated to a grid of 1/16° spatial resolution by Livneh et al (2013,2015). The use of this dataset allows for direct comparison of observations with model projections that are also downscaled to the same resolution. Charts show these observations as either black dots or black bars, depending on the variable, and are also overlayed on top of climate projections to provide context for climate model simulations.
+               This tool uses data observed at weather stations from 1951-2023, interpolated to an approximately 4km grid. These data come from NOAA's National Centers for Environmental Information (NCEI) nClimGrid-Daily data set (Durre et al., 2022).
+               </p>
+               <p>
+                Durre, I., Arguez, A., Schreck III, C.J., Squires, M.F. and Vose, R.S., 2022. Daily high-resolution temperature and precipitation fields for the contiguous United States from 1951 to present. Journal of Atmospheric and Oceanic Technology, 39(12), pp.1837-1855.
+               </p>
+               <h4><br/>&bull; TRENDS IN OBSERVED DATA OVER TIME</h4>
+               <p>
+               Changes in all variables over time are calculated for two periods: 1951-2023 and 1980-2023. Simple linear regression is employed to determine the amount of change per decade that has been observed for each county. County maps of the Northeast United States show the magnitude and spatial variability of these changes. Trends for each analyzed period are also shown on the time series charts, if trends are deemed statistically significant at the 90% level.
+               </p>
+               <h4><br/>&bull; CLIMATE PROJECTIONS</h4>
+               <p>
+               Historical observed data are derived from weather station data interpolated to a grid with 1/16° spatial resolution using the methods of Livneh et al (2013,2015) and Pierce et al. (2021). The use of this dataset allows for direct comparison of observations with model projections that are also downscaled to the same resolution. Charts show these observations as either black dots or black bars, depending on the variable, and are also overlayed on top of climate projections to provide context for climate model simulations.
+               </p>
+               <p>
+               Localized Constructed Analogs (LOCA, Pierce et al. 2014) downscaled data from 16 independent climate models are used to show simulated (in the past) and projected (into the future) climate conditions. On charts, a green band indicates the range of these model results, and a dark green line represents the weighted average of the model results. These data are available at 1/16° spatial resolution and daily temporal resolution for the period from 1950 to 2100.
+               </p>
+               <p>
+               Climate models project conditions for multiple emissions scenarios. This allows us to understand the magnitude of changes we might expect given the range of possible greenhouse gas emissions, depending on human activity, over the next century. Climate projections for three emissions scenarios are provided in this tool:<br/>
+               </p>
+               <p>
+                   <i>(1) Very High Emissions</i>: Under this scenario, greenhouse gas emissions and concentrations  continue to increase through most of the century. This is also known as the SSP585 scenario, as defined by the Intergovernmental Panel on Climate Change (IPCC). It was previously referred to as the RCP8.5 scenario.
+               </p>
+               <p>
+                   <i>(2) High Emissions</i>: This scenario is in the upper-middle part of the full range of scenarios. It assumes current additional climate policy. This is also known as the SSP370 scenario, as defined by the Intergovernmental Panel on Climate Change (IPCC).
+               </p>
+               <p>
+                   <i>(1) Low Emissions</i>:  Under this scenario, greenhouse gas emissions gradually shift toward lower levels. This is the current SSP245 emissions scenario as defined by the IPCC.  It was previously referred to as the RCP4.5 scenario.
                </p>
                <p>
                Livneh, B., E. A. Rosenberg, C. Lin, B. Nijssen, V. Mishra, K. M. Andreadis, E. P. Maurer, and D. P. Lettenmaier (2013), A long-term hydrologically based dataset of land surface fluxes and states for the conterminous United States: Update and extensions, J. Clim., 26(23), 9384–9392, doi 10.1175/JCLI-D-12-00508.1.
@@ -83,22 +110,8 @@ export class AppStore {
                <p>
                Livneh, B., Bohn, T.J., Pierce, D.W., Munoz-Arriola, F., Nijssen, B., Vose, R., Brekke, L. 2015. A spatially comprehensive, hydrometeorological data set for Mexico, the U.S., and Southern Canada 1950–2013. Scientific Data 2:150042. doi: 10.1038/sdata.2015.42.
                </p>
-               <h4><br/>&bull; TRENDS IN OBSERVED DATA OVER TIME</h4>
                <p>
-               Changes in all variables over time are calculated for two periods: 1950-2013 and 1980-2013. Simple linear regression is employed to determine the amount of change per decade that has been observed for each county. County maps of the Northeast United States show the magnitude and spatial variability of these changes. Trends for each analyzed period are also shown on the time series charts, if trends are deemed statistically significant at the 90% level.
-               </p>
-               <h4><br/>&bull; CLIMATE PROJECTIONS</h4>
-               <p>
-               Localized Constructed Analogs (LOCA, Pierce et al. 2014) downscaled data from 32 independent climate models are used to show simulated (in the past) and projected (into the future) climate conditions. On charts, a green band indicates the range of these model results, and a dark green line represents the weighted average of the model results. These data are available at 1/16° spatial resolution and daily temporal resolution for the period from 1950 to 2100.
-               </p>
-               <p>
-               Climate models project conditions for multiple emissions scenarios. This allows us to understand the magnitude of changes we might expect given the range of possible greenhouse gas emissions, depending on human activity, over the next century. Climate projections for two emissions scenarios are provided in this tool:<br/>
-               </p>
-               <p>
-                   <i>(1) High Emissions</i>: Under this scenario, greenhouse gas emissions and concentrations increase considerably over time, with no mitigation. This is also known as RCP8.5, as defined by the Intergovernmental Panel on Climate Change (IPCC).
-               </p>
-               <p>
-                   <i>(2) Low Emissions</i>: Under this scenario, greenhouse gas emissions peak at year 2040 and then level off. This is also known as RCP4.5, as defined by the IPCC.
+               Pierce, D.W., Su, L., Cayan, D.R., Risser, M.D., Livneh, B. and Lettenmaier, D.P., 2021. An extreme-preserving long-term gridded daily precipitation dataset for the conterminous United States. Journal of Hydrometeorology, 22(7), pp.1883-1895.
                </p>
                <p>
                Pierce, D. W., D. R. Cayan, and B. L. Thrasher, 2014: Statistical Downscaling Using Localized Constructed Analogs (LOCA). Journal of Hydrometeorology, volume 15, 2558-2585. doi: 10.1175/JHM-D-14-0082.1.
@@ -115,7 +128,6 @@ export class AppStore {
     //@observable display_series = 'gddGrowingSeason';
     @observable display_series = 'avgtGrowingSeason';
     @action updateDisplaySeries = (changeEvent) => {
-        //console.log(changeEvent.target.value);
         if (changeEvent.target.value === 'seasonLength') {
             this.loadObservationsSeasonLength(this.getCountyFips)
         }
@@ -139,7 +151,6 @@ export class AppStore {
     // -----------------------------------------------------------------------------------
     @observable projection_view = false;
     @action updateProjectionView = (changeEvent) => {
-        console.log(changeEvent.target.checked);
         this.projection_view = changeEvent.target.checked
     };
     @action updateProjectionViewFromAccordion = () => {
@@ -151,7 +162,7 @@ export class AppStore {
     @computed get getProjectionView() { return this.projection_view };
 
     // MODEL SCENARIO
-    @observable model_scenario = 'rcp85';
+    @observable model_scenario = 'ssp585';
     @action updateModelScenario = (changeEvent) => {
         this.model_scenario = changeEvent.target.value
     };
@@ -196,7 +207,7 @@ export class AppStore {
             this.gdd_base = v.value
             // download data using new base for GDD
             this.updateProjectionView_manual(false);
-            this.loadAnnualData_1950_2010(this.getCountyFips);
+            this.loadAnnualData_1951_2023(this.getCountyFips);
             //this.loadProjections(this.getCountyFips)
             this.loadProjectionsGdd(this.getCountyFips)
         }
@@ -213,7 +224,7 @@ export class AppStore {
             this.precip_threshold = v.value
             // download data using new threshold for precip
             this.updateProjectionView_manual(false);
-            this.loadAnnualData_1950_2010(this.getCountyFips);
+            this.loadAnnualData_1951_2023(this.getCountyFips);
             this.loadProjections(this.getCountyFips)
         }
     @computed get getPrecipThreshold() {
@@ -229,7 +240,7 @@ export class AppStore {
             this.temp_threshold = v.value
             // download data using new threshold for temp
             this.updateProjectionView_manual(false);
-            this.loadAnnualData_1950_2010(this.getCountyFips);
+            this.loadAnnualData_1951_2023(this.getCountyFips);
             this.loadProjections(this.getCountyFips)
         }
     @computed get getTempThreshold() {
@@ -293,12 +304,15 @@ export class AppStore {
 
     // Check if a projection is loading
     @computed get isProjectionLoading() {
-            if (this.getProjectionData.rcp85.mean.years.length > 0 &&
-                this.getProjectionData.rcp85.min.years.length > 0 &&
-                this.getProjectionData.rcp85.max.years.length > 0 &&
-                this.getProjectionData.rcp45.mean.years.length > 0 &&
-                this.getProjectionData.rcp45.min.years.length > 0 &&
-                this.getProjectionData.rcp45.max.years.length > 0 &&
+            if (this.getProjectionData.ssp585.mean.years.length > 0 &&
+                this.getProjectionData.ssp585.min.years.length > 0 &&
+                this.getProjectionData.ssp585.max.years.length > 0 &&
+                this.getProjectionData.ssp370.mean.years.length > 0 &&
+                this.getProjectionData.ssp370.min.years.length > 0 &&
+                this.getProjectionData.ssp370.max.years.length > 0 &&
+                this.getProjectionData.ssp245.mean.years.length > 0 &&
+                this.getProjectionData.ssp245.min.years.length > 0 &&
+                this.getProjectionData.ssp245.max.years.length > 0 &&
                 !this.getLoaderProjections) {
                     return false;
             } else {
@@ -330,9 +344,9 @@ export class AppStore {
     getLegendThresholds = () => {
         let keyForVar = this.getKeyForVar()
         
-        // use trends from 1980-2013 to calculate legend thresholds. We will keep thresholds consistent between periods
+        // use trends from 1980-2023 to calculate legend thresholds. We will keep thresholds consistent between periods
         //let vList = Object.values(this.getTrends[keyForVar[this.getDisplaySeries]]['slope']);
-        let vList = Object.values(this.getTrendsFor1980_2013[keyForVar[this.getDisplaySeries]]['slope']);
+        let vList = Object.values(this.getTrendsFor1980_2023[keyForVar[this.getDisplaySeries]]['slope']);
         let maxValue = Math.max(...vList);
         let minValue = Math.min(...vList);
         maxValue = Math.max( Math.abs(maxValue), Math.abs(minValue) );
@@ -452,21 +466,21 @@ export class AppStore {
             this.trends = l;
         }
     @computed get getTrends() {
-            if (this.getTrendStartYear==='1950') {
-                return livneh_stats_1950_2013
+            if (this.getTrendStartYear==='1951') {
+                return ncei_clim_stats_1951_2023
             } else if (this.getTrendStartYear==='1980') {
-                return livneh_stats_1980_2013
+                return ncei_clim_stats_1980_2023
             } else {
                 return null
             }
         }
 
-    @computed get getTrendsFor1950_2013() {
-            return livneh_stats_1950_2013
+    @computed get getTrendsFor1951_2023() {
+            return ncei_clim_stats_1951_2023
         }
 
-    @computed get getTrendsFor1980_2013() {
-            return livneh_stats_1980_2013
+    @computed get getTrendsFor1980_2023() {
+            return ncei_clim_stats_1980_2023
         }
 
     findTrendForFips = (fips) => {
@@ -480,23 +494,23 @@ export class AppStore {
         }
     }
 
-    findTrendForFips_1950_2013 = (fips) => {
+    findTrendForFips_1951_2023 = (fips) => {
 
         let keyForVar = this.getKeyForVar()
     
-        if (this.getTrendsFor1950_2013[keyForVar[this.getDisplaySeries]]['slope'].hasOwnProperty(fips)) {
-            return this.getTrendsFor1950_2013[keyForVar[this.getDisplaySeries]]['slope'][fips]
+        if (this.getTrendsFor1951_2023[keyForVar[this.getDisplaySeries]]['slope'].hasOwnProperty(fips)) {
+            return this.getTrendsFor1951_2023[keyForVar[this.getDisplaySeries]]['slope'][fips]
         } else {
             return 0.0
         }
     }
 
-    findTrendForFips_1980_2013 = (fips) => {
+    findTrendForFips_1980_2023 = (fips) => {
 
         let keyForVar = this.getKeyForVar()
     
-        if (this.getTrendsFor1980_2013[keyForVar[this.getDisplaySeries]]['slope'].hasOwnProperty(fips)) {
-            return this.getTrendsFor1980_2013[keyForVar[this.getDisplaySeries]]['slope'][fips]
+        if (this.getTrendsFor1980_2023[keyForVar[this.getDisplaySeries]]['slope'].hasOwnProperty(fips)) {
+            return this.getTrendsFor1980_2023[keyForVar[this.getDisplaySeries]]['slope'][fips]
         } else {
             return 0.0
         }
@@ -513,23 +527,23 @@ export class AppStore {
         }
     }
 
-    findSigForFips_1950_2013 = (fips) => {
+    findSigForFips_1951_2023 = (fips) => {
 
         let keyForVar = this.getKeyForVar()
 
-        if (this.getTrendsFor1950_2013[keyForVar[this.getDisplaySeries]]['pvalue'].hasOwnProperty(fips)) {
-            return this.getTrendsFor1950_2013[keyForVar[this.getDisplaySeries]]['pvalue'][fips]
+        if (this.getTrendsFor1951_2023[keyForVar[this.getDisplaySeries]]['pvalue'].hasOwnProperty(fips)) {
+            return this.getTrendsFor1951_2023[keyForVar[this.getDisplaySeries]]['pvalue'][fips]
         } else {
             return 1.0
         }
     }
 
-    findSigForFips_1980_2013 = (fips) => {
+    findSigForFips_1980_2023 = (fips) => {
 
         let keyForVar = this.getKeyForVar()
 
-        if (this.getTrendsFor1980_2013[keyForVar[this.getDisplaySeries]]['pvalue'].hasOwnProperty(fips)) {
-            return this.getTrendsFor1980_2013[keyForVar[this.getDisplaySeries]]['pvalue'][fips]
+        if (this.getTrendsFor1980_2023[keyForVar[this.getDisplaySeries]]['pvalue'].hasOwnProperty(fips)) {
+            return this.getTrendsFor1980_2023[keyForVar[this.getDisplaySeries]]['pvalue'][fips]
         } else {
             return 1.0
         }
@@ -645,7 +659,7 @@ export class AppStore {
                         this.updateCountyFips(feature.properties.id);
                         this.changeCountyAndState(feature.properties.name,feature.properties.state);
                         // download data for this county
-                        this.loadAnnualData_1950_2010(this.getCountyFips);
+                        this.loadAnnualData_1951_2023(this.getCountyFips);
                         this.loadObservationsSeasonLength(this.getCountyFips)
                         this.loadProjections(this.getCountyFips)
                         // close map and display chart
@@ -702,31 +716,33 @@ export class AppStore {
             return this.chart_projection_data
         }
 
-  @action loadAnnualData_1950_2010 = (id) => {
+  @action loadAnnualData_1951_2023 = (id) => {
 
     if (this.getLoaderData === false) { this.updateLoaderData(true); }
 
     // FOR ANNUAL REQUESTS
     const params = {
-      "grid": "livneh",
       "county":id,
-      "sdate": "1950",
-      "edate": "2013",
+    //   "grid": "livneh",
+    //   "sdate": "1950",
+    //   "edate": "2013",
+      "grid": "ncei-clim",
+      "sdate": "1951",
+      "edate": "2023",
       "elems": [
-        { "name":"gdd","base":this.getGddBase,"interval":"yly","duration":1,"reduce":"sum","area_reduce":"county_mean" },
-        { "name":"maxt","interval":"yly","duration":1,"reduce":"mean","area_reduce":"county_mean" },
-        { "name":"mint","interval":"yly","duration":1,"reduce":"mean","area_reduce":"county_mean" },
-        { "name":"maxt","interval":"yly","duration":1,"reduce":"cnt_gt_"+this.getTempThreshold,"area_reduce":"county_mean" },
-        { "name":"pcpn","interval":"yly","duration":1,"reduce":"sum","area_reduce":"county_mean" },
-        { "name":"pcpn","interval":"yly","duration":1,"reduce":"cnt_gt_"+this.getPrecipThreshold,"area_reduce":"county_mean" },
-        { "name":"avgt","interval":"yly","duration":1,"reduce":"mean","area_reduce":"county_mean" },
+        { "name":"gdd","base":this.getGddBase,"interval":[1],"duration":1,"reduce":"sum","area_reduce":"county_mean" },
+        { "name":"maxt","interval":[1],"duration":1,"reduce":"mean","area_reduce":"county_mean" },
+        { "name":"mint","interval":[1],"duration":1,"reduce":"mean","area_reduce":"county_mean" },
+        { "name":"maxt","interval":[1],"duration":1,"reduce":"cnt_gt_"+this.getTempThreshold,"area_reduce":"county_mean" },
+        { "name":"pcpn","interval":[1],"duration":1,"reduce":"sum","area_reduce":"county_mean" },
+        { "name":"pcpn","interval":[1],"duration":1,"reduce":"cnt_gt_"+this.getPrecipThreshold,"area_reduce":"county_mean" },
+        { "name":"avgt","interval":[1],"duration":1,"reduce":"mean","area_reduce":"county_mean" },
       ]
     };
 
     return axios
       .post("https://grid2.rcc-acis.org/GridData", params)
       .then(res => {
-        //console.log('successful download of livneh data 1950-2010');
         let data = {}
         data['years'] = []
         //data['seasonLength'] = []
@@ -756,10 +772,11 @@ export class AppStore {
         this.chart_data['pcpnGrowingSeason'] = data['pcpnGrowingSeason']
         this.chart_data['daysAbovePcpn'] = data['daysAbovePcpn']
         this.chart_data['avgtGrowingSeason'] = data['avgtGrowingSeason']
+
         if (this.getLoaderData === true) { this.updateLoaderData(false); }
       })
       .catch(err => {
-        console.log("Failed to load livneh data 1950-2010 ", err);
+        console.log("Failed to load ncei-clim data 1951-2023 ", err);
       });
   }
 
@@ -788,12 +805,17 @@ export class AppStore {
             data['daysAbovePcpn'] = []
             data['avgtGrowingSeason'] = []
             this.projection_data = {
-                    'rcp45' : {
+                    'ssp245' : {
                         'mean' : data,
                         'max' : data,
                         'min' : data,
                         },
-                    'rcp85' : {
+                    'ssp370' : {
+                        'mean' : data,
+                        'max' : data,
+                        'min' : data,
+                        },
+                    'ssp585' : {
                         'mean' : data,
                         'max' : data,
                         'min' : data,
@@ -807,30 +829,36 @@ export class AppStore {
     // store downloaded gdd projection data
     @observable gdd_projection_data = null;
     @action updateGddProjectionData = (d) => {
-            this.projection_data['rcp85']['mean']['gddGrowingSeason'] = d['wMean_rcp85'];
-            this.projection_data['rcp85']['max']['gddGrowingSeason'] = d['allMax_rcp85'];
-            this.projection_data['rcp85']['min']['gddGrowingSeason'] = d['allMin_rcp85'];
-            this.projection_data['rcp45']['mean']['gddGrowingSeason'] = d['wMean_rcp45'];
-            this.projection_data['rcp45']['max']['gddGrowingSeason'] = d['allMax_rcp45'];
-            this.projection_data['rcp45']['min']['gddGrowingSeason'] = d['allMin_rcp45'];
+            this.projection_data['ssp585']['mean']['gddGrowingSeason'] = d['wMean_ssp585'];
+            this.projection_data['ssp585']['max']['gddGrowingSeason'] = d['allMax_ssp585'];
+            this.projection_data['ssp585']['min']['gddGrowingSeason'] = d['allMin_ssp585'];
+            this.projection_data['ssp370']['mean']['gddGrowingSeason'] = d['wMean_ssp370'];
+            this.projection_data['ssp370']['max']['gddGrowingSeason'] = d['allMax_ssp370'];
+            this.projection_data['ssp370']['min']['gddGrowingSeason'] = d['allMin_ssp370'];
+            this.projection_data['ssp245']['mean']['gddGrowingSeason'] = d['wMean_ssp245'];
+            this.projection_data['ssp245']['max']['gddGrowingSeason'] = d['allMax_ssp245'];
+            this.projection_data['ssp245']['min']['gddGrowingSeason'] = d['allMin_ssp245'];
         }
     @action emptyGddProjectionData = () => {
             if (this.getGddProjectionData) {
-                this.projection_data['rcp85']['mean']['gddGrowingSeason'] = [];
-                this.projection_data['rcp85']['max']['gddGrowingSeason'] = [];
-                this.projection_data['rcp85']['min']['gddGrowingSeason'] = [];
-                this.projection_data['rcp45']['mean']['gddGrowingSeason'] = [];
-                this.projection_data['rcp45']['max']['gddGrowingSeason'] = [];
-                this.projection_data['rcp45']['min']['gddGrowingSeason'] = [];
+                this.projection_data['ssp585']['mean']['gddGrowingSeason'] = [];
+                this.projection_data['ssp585']['max']['gddGrowingSeason'] = [];
+                this.projection_data['ssp585']['min']['gddGrowingSeason'] = [];
+                this.projection_data['ssp370']['mean']['gddGrowingSeason'] = [];
+                this.projection_data['ssp370']['max']['gddGrowingSeason'] = [];
+                this.projection_data['ssp370']['min']['gddGrowingSeason'] = [];
+                this.projection_data['ssp245']['mean']['gddGrowingSeason'] = [];
+                this.projection_data['ssp245']['max']['gddGrowingSeason'] = [];
+                this.projection_data['ssp245']['min']['gddGrowingSeason'] = [];
             }
         }
     @computed get getGddProjectionData() {
             return this.gdd_projection_data
         }
 
-    @action loadProjectionsGdd_1950_2100 = (county_fips,gdd_base) => {
+    @action loadProjectionsGdd_1951_2099 = (county_fips,gdd_base) => {
             if (this.getLoaderProjections === false) { this.updateLoaderProjections(true); }
-            fetch(`https://nrcc-cornell.github.io/csf-climatechange-v7/data/gdd/${county_fips}/${gdd_base}.zip`)
+            fetch(`./data/gdd/${county_fips}/${gdd_base}.zip`)
                 .then(res => res.blob())
                 .then(blob => JSZip.loadAsync(blob))
                 .then(zip => zip.file(`${gdd_base}.json`).async("text"))
@@ -869,17 +897,20 @@ export class AppStore {
 
     // store downloaded season length projection data
     @action updateSeasonLengthProjectionData = (d) => {
-            this.projection_data['rcp85']['mean']['seasonLength'] = d['wMean_rcp85'];
-            this.projection_data['rcp85']['max']['seasonLength'] = d['allMax_rcp85'];
-            this.projection_data['rcp85']['min']['seasonLength'] = d['allMin_rcp85'];
-            this.projection_data['rcp45']['mean']['seasonLength'] = d['wMean_rcp45'];
-            this.projection_data['rcp45']['max']['seasonLength'] = d['allMax_rcp45'];
-            this.projection_data['rcp45']['min']['seasonLength'] = d['allMin_rcp45'];
+            this.projection_data['ssp585']['mean']['seasonLength'] = d['wMean_ssp585'];
+            this.projection_data['ssp585']['max']['seasonLength'] = d['allMax_ssp585'];
+            this.projection_data['ssp585']['min']['seasonLength'] = d['allMin_ssp585'];
+            this.projection_data['ssp370']['mean']['seasonLength'] = d['wMean_ssp370'];
+            this.projection_data['ssp370']['max']['seasonLength'] = d['allMax_ssp370'];
+            this.projection_data['ssp370']['min']['seasonLength'] = d['allMin_ssp370'];
+            this.projection_data['ssp245']['mean']['seasonLength'] = d['wMean_ssp245'];
+            this.projection_data['ssp245']['max']['seasonLength'] = d['allMax_ssp245'];
+            this.projection_data['ssp245']['min']['seasonLength'] = d['allMin_ssp245'];
         }
 
     @action loadObservationsSeasonLength_1950_2100 = (county_fips,season_threshold) => {
         if (this.getLoaderSeasonLengthData === false) { this.updateLoaderSeasonLengthData(true); }
-        fetch(`https://nrcc-cornell.github.io/csf-climatechange-v7/data/seasonObs/${county_fips}.zip`)
+        fetch(`./data/seasonObs/${county_fips}.zip`)
             .then(res => res.blob())
             .then(blob => JSZip.loadAsync(blob))
             .then(zip => zip.file(`${county_fips}.json`).async("text"))
@@ -910,7 +941,7 @@ export class AppStore {
 
     @action loadProjectionsSeasonLength_1950_2100 = (county_fips,season_threshold) => {
         if (this.getLoaderProjections === false) { this.updateLoaderProjections(true); }
-        fetch(`https://nrcc-cornell.github.io/csf-climatechange-v7/data/seasonProj/${county_fips}.zip`)
+        fetch(`./data/seasonProj/${county_fips}.zip`)
             .then(res => res.blob())
             .then(blob => JSZip.loadAsync(blob))
             .then(zip => zip.file(`${county_fips}.json`).async("text"))
@@ -938,7 +969,7 @@ export class AppStore {
         // });
     }
 
-  @action loadProjections_1950_2100 = (id,scen,re) => {
+  @action loadProjections_1951_2099 = (id,scen,re) => {
 
     if (this.getLoaderProjections === false) { this.updateLoaderProjections(true); }
     let varReduce = ''
@@ -947,25 +978,25 @@ export class AppStore {
     if (re==='min') { varReduce = 'allMin' }
 
     const params = {
-      "grid": "loca:"+varReduce+":"+scen,
+      "grid": "loca2:"+varReduce+":"+scen,
       "county":id,
-      "sdate": "1950",
+      "sdate": "1951",
       "edate": "2099",
       "elems": [
-        { "name":"gdd","base":"50","interval":"yly","duration":1,"reduce":"sum","area_reduce":"county_mean" },
-        { "name":"maxt","interval":"yly","duration":1,"reduce":"mean","area_reduce":"county_mean" },
-        { "name":"mint","interval":"yly","duration":1,"reduce":"mean","area_reduce":"county_mean" },
-        { "name":"maxt","interval":"yly","duration":1,"reduce":"cnt_gt_"+this.getTempThreshold,"area_reduce":"county_mean" },
-        { "name":"pcpn","interval":"yly","duration":1,"reduce":"sum","area_reduce":"county_mean" },
-        { "name":"pcpn","interval":"yly","duration":1,"reduce":"cnt_gt_"+this.getPrecipThreshold,"area_reduce":"county_mean" },
-        { "name":"avgt","interval":"yly","duration":1,"reduce":"mean","area_reduce":"county_mean" },
+        { "name":"gdd","base":"50","interval":[1],"duration":1,"reduce":"sum","area_reduce":"county_mean" },
+        { "name":"maxt","interval":[1],"duration":1,"reduce":"mean","area_reduce":"county_mean" },
+        { "name":"mint","interval":[1],"duration":1,"reduce":"mean","area_reduce":"county_mean" },
+        { "name":"maxt","interval":[1],"duration":1,"reduce":"cnt_gt_"+this.getTempThreshold,"area_reduce":"county_mean" },
+        { "name":"pcpn","interval":[1],"duration":1,"reduce":"sum","area_reduce":"county_mean" },
+        { "name":"pcpn","interval":[1],"duration":1,"reduce":"cnt_gt_"+this.getPrecipThreshold,"area_reduce":"county_mean" },
+        { "name":"avgt","interval":[1],"duration":1,"reduce":"mean","area_reduce":"county_mean" },
       ]
     };
 
     return axios
       .post("https://grid2.rcc-acis.org/GridData", params)
       .then(res => {
-        console.log('successful download of projection data : ' + scen + ' ' + re + ' 1950-2100');
+        console.log('successful download of projection data : ' + scen + ' ' + re + ' 1951-2099');
         let data = {}
         data['years'] = []
         //data['gddGrowingSeason'] = []
@@ -989,7 +1020,7 @@ export class AppStore {
         if (this.getLoaderProjections === true) { this.updateLoaderProjections(false); }
       })
       .catch(err => {
-        console.log("Failed to load projection data 1950-2100 ", err);
+        console.log("Failed to load projection data 1951-2099 ", err);
       });
   }
 
@@ -1002,7 +1033,7 @@ export class AppStore {
     }
 
     @action loadProjectionsGdd = (id) => {
-        this.loadProjectionsGdd_1950_2100(id,this.getGddBase);
+        this.loadProjectionsGdd_1951_2099(id,this.getGddBase);
     }
 
     @action loadProjections = (id) => {
@@ -1010,19 +1041,22 @@ export class AppStore {
         this.emptyGddProjectionData()
         this.emptyProjectionData()
         this.loadProjectionsSeasonLength_1950_2100(id,this.getSeasonThreshold);
-        this.loadProjectionsGdd_1950_2100(id,this.getGddBase);
-        this.loadProjections_1950_2100(id,'rcp85','mean');
-        this.loadProjections_1950_2100(id,'rcp85','max');
-        this.loadProjections_1950_2100(id,'rcp85','min');
-        this.loadProjections_1950_2100(id,'rcp45','mean');
-        this.loadProjections_1950_2100(id,'rcp45','max');
-        this.loadProjections_1950_2100(id,'rcp45','min');
+        this.loadProjectionsGdd_1951_2099(id,this.getGddBase);
+        this.loadProjections_1951_2099(id,'ssp585','mean');
+        this.loadProjections_1951_2099(id,'ssp585','max');
+        this.loadProjections_1951_2099(id,'ssp585','min');
+        this.loadProjections_1951_2099(id,'ssp370','mean');
+        this.loadProjections_1951_2099(id,'ssp370','max');
+        this.loadProjections_1951_2099(id,'ssp370','min');
+        this.loadProjections_1951_2099(id,'ssp245','mean');
+        this.loadProjections_1951_2099(id,'ssp245','max');
+        this.loadProjections_1951_2099(id,'ssp245','min');
     }
 
     constructor() {
         this.changeMouseoverCountyAndState(this.getCountyFips,this.getCounty,this.getStateAbbr);
         this.initChartData()
-        this.loadAnnualData_1950_2010(this.getCountyFips)
+        this.loadAnnualData_1951_2023(this.getCountyFips)
         this.loadProjections(this.getCountyFips)
     }
 

@@ -73,8 +73,9 @@ class DisplayChart extends Component {
 
             // labels of emission type, for legend
             let emissionType = {}
-            emissionType['rcp85'] = 'high'
-            emissionType['rcp45'] = 'low'
+            emissionType['ssp585'] = 'very high'
+            emissionType['ssp370'] = 'high'
+            emissionType['ssp245'] = 'intermediate'
 
             // labels for y-axis, dependent on variable
             let yAxisLabel = {}
@@ -119,32 +120,32 @@ class DisplayChart extends Component {
                 return ranges;
             }
 
-            // run linear regression on current variable 1950-2013
+            // run linear regression on current variable 1951-2023
             // fit is var that hold fit[0] = slope, and fit[1] = y-intercept
             let fit;
-            let fitData_1950_2013=[];
+            let fitData_1951_2023=[];
             let xstep=[];
             for (var i=0; i<data[this.props.store.app.getDisplaySeries].length; i++) {
                xstep.push(i);
             }
             fit = simple_linear_regression(xstep,data[this.props.store.app.getDisplaySeries]);
             for (i=0; i<data[this.props.store.app.getDisplaySeries].length; i++) {
-                fitData_1950_2013.push( fit[0]*i + fit[1] )
+                fitData_1951_2023.push( fit[0]*i + fit[1] )
             }
-            let rateOfChangePerDecade_1950_2013 = fit[0]*10.
+            let rateOfChangePerDecade_1951_2023 = fit[0]*10.
 
-            // run linear regression on current variable 1980-2013
+            // run linear regression on current variable 1980-2023
             // fit is var that hold fit[0] = slope, and fit[1] = y-intercept
-            let fitData_1980_2013=[];
+            let fitData_1980_2023=[];
             xstep=[];
             for (i=0; i<data[this.props.store.app.getDisplaySeries].slice(30).length; i++) {
                xstep.push(i);
             }
             fit = simple_linear_regression(xstep,data[this.props.store.app.getDisplaySeries].slice(30));
-            for (i=0; i<data[this.props.store.app.getDisplaySeries].slice(30).length; i++) {
-                fitData_1980_2013.push( fit[0]*i + fit[1] )
+            for (i=0; i<data[this.props.store.app.getDisplaySeries].slice(29).length; i++) {
+                fitData_1980_2023.push( fit[0]*i + fit[1] )
             }
-            let rateOfChangePerDecade_1980_2013 = fit[0]*10.
+            let rateOfChangePerDecade_1980_2023 = fit[0]*10.
 
             function tooltipFormatter() {
                 var i, item, precision;
@@ -163,11 +164,11 @@ class DisplayChart extends Component {
                     if (item.series.name.includes('Observed value')) {
                         tips += '<br/>' + item.y.toFixed(precision) + ' : <span style="color:'+item.color+';font-size:12px;font-weight:bold">' +  item.series.name + '</span>';
                     }
-                    if (item.series.name.includes('1950-2013')) {
-                        tips += '<br/>' + rateOfChangePerDecade_1950_2013.toFixed(1) + ' : <span style="color:'+item.color+';font-size:12px;font-weight:bold">' +  item.series.name + '</span>';
+                    if (item.series.name.includes('1951-2023')) {
+                        tips += '<br/>' + rateOfChangePerDecade_1951_2023.toFixed(1) + ' : <span style="color:'+item.color+';font-size:12px;font-weight:bold">' +  item.series.name + '</span>';
                     }
-                    if (item.series.name.includes('1980-2013')) {
-                        tips += '<br/>' + rateOfChangePerDecade_1980_2013.toFixed(1) + ' : <span style="color:'+item.color+';font-size:12px;font-weight:bold">' +  item.series.name + '</span>';
+                    if (item.series.name.includes('1980-2023')) {
+                        tips += '<br/>' + rateOfChangePerDecade_1980_2023.toFixed(1) + ' : <span style="color:'+item.color+';font-size:12px;font-weight:bold">' +  item.series.name + '</span>';
                     }
                 }
                 return header + tips;
@@ -175,15 +176,15 @@ class DisplayChart extends Component {
 
             const trendDescriptionText = () => {
                 let d
-                if (this.props.store.app.getTrendStartYear==='1950') {
-                    d = (this.props.store.app.findSigForFips_1950_2013(this.props.store.app.getCountyFips) < 0.10) ?
-                        (this.props.store.app.findTrendForFips_1950_2013(this.props.store.app.getCountyFips) > 0) ?
+                if (this.props.store.app.getTrendStartYear==='1951') {
+                    d = (this.props.store.app.findSigForFips_1951_2023(this.props.store.app.getCountyFips) < 0.10) ?
+                        (this.props.store.app.findTrendForFips_1951_2023(this.props.store.app.getCountyFips) > 0) ?
                               "increasing "
                             : "decreasing "
                         : ""
                 } else if (this.props.store.app.getTrendStartYear==='1980') {
-                    d = (this.props.store.app.findSigForFips_1980_2013(this.props.store.app.getCountyFips) < 0.10) ?
-                        (this.props.store.app.findTrendForFips_1980_2013(this.props.store.app.getCountyFips) > 0) ?
+                    d = (this.props.store.app.findSigForFips_1980_2023(this.props.store.app.getCountyFips) < 0.10) ?
+                        (this.props.store.app.findTrendForFips_1980_2023(this.props.store.app.getCountyFips) > 0) ?
                               "increasing "
                             : "decreasing "
                         : ""
@@ -215,9 +216,9 @@ class DisplayChart extends Component {
                     if (series) { series.hide(); }
 
                     series = chart.get('series1');
-                    series.setVisible(this.props.store.app.findSigForFips_1950_2013(this.props.store.app.getCountyFips)<0.10);
+                    series.setVisible(this.props.store.app.findSigForFips_1951_2023(this.props.store.app.getCountyFips)<0.10);
                     series = chart.get('series1b');
-                    series.setVisible(this.props.store.app.findSigForFips_1980_2013(this.props.store.app.getCountyFips)<0.10);
+                    series.setVisible(this.props.store.app.findSigForFips_1980_2023(this.props.store.app.getCountyFips)<0.10);
 
                 }
             };
@@ -293,8 +294,8 @@ class DisplayChart extends Component {
                      dateTimeLabelFormats:{ year:'%Y' },
                  },
                  yAxis: [{ 
-                     min: (pdata && this.props.store.app.getProjectionView) ? Math.min(...pdata['rcp85']['min'][this.props.store.app.getDisplaySeries]) : null,
-                     max: (pdata && this.props.store.app.getProjectionView) ? Math.max(...pdata['rcp85']['max'][this.props.store.app.getDisplaySeries]) : null,
+                     min: (pdata && this.props.store.app.getProjectionView) ? Math.min(...pdata['ssp585']['min'][this.props.store.app.getDisplaySeries]) : null,
+                     max: (pdata && this.props.store.app.getProjectionView) ? Math.max(...pdata['ssp585']['max'][this.props.store.app.getDisplaySeries]) : null,
                      title:{ text:yAxisLabel[this.props.store.app.getDisplaySeries],
                      style:{"font-size":"14px", color:"#000000"}},
                      gridZIndex:1,
@@ -315,33 +316,33 @@ class DisplayChart extends Component {
                      marker: { enabled: true, fillColor: "#000000", lineWidth: 2, lineColor: "#000000", radius:2, symbol:"circle" }
                    }, {
                      id: "series1",
-                     selected: (!this.props.store.app.getProjectionView && this.props.store.app.findSigForFips_1950_2013(this.props.store.app.getCountyFips) < 0.10) ? true : false,
-                     name: data.years[0]+"-"+data.years[data.years.length-1]+", "+trendDescriptionText()+"trend ("+rateOfChangePerDecade_1950_2013.toFixed(1)+valueSuffix[this.props.store.app.getDisplaySeries]+"/Decade)",
-                     data: fitData_1950_2013,
-                     visible: (!this.props.store.app.getProjectionView && this.props.store.app.findSigForFips_1950_2013(this.props.store.app.getCountyFips) < 0.10) ? true : false,
-                     showInLegend: (!this.props.store.app.getProjectionView && this.props.store.app.findSigForFips_1950_2013(this.props.store.app.getCountyFips) < 0.10) ? true : false,
+                     selected: (!this.props.store.app.getProjectionView && this.props.store.app.findSigForFips_1951_2023(this.props.store.app.getCountyFips) < 0.10) ? true : false,
+                     name: data.years[0]+"-"+data.years[data.years.length-1]+", "+trendDescriptionText()+"trend ("+rateOfChangePerDecade_1951_2023.toFixed(1)+valueSuffix[this.props.store.app.getDisplaySeries]+"/Decade)",
+                     data: fitData_1951_2023,
+                     visible: (!this.props.store.app.getProjectionView && this.props.store.app.findSigForFips_1951_2023(this.props.store.app.getCountyFips) < 0.10) ? true : false,
+                     showInLegend: (!this.props.store.app.getProjectionView && this.props.store.app.findSigForFips_1951_2023(this.props.store.app.getCountyFips) < 0.10) ? true : false,
                      type: "line",
                      zIndex: 24,
                      lineWidth: 4,
-                     color: (this.props.store.app.findSigForFips_1950_2013(this.props.store.app.getCountyFips) < 0.10) ? 
-                         (this.props.store.app.findTrendForFips_1950_2013(this.props.store.app.getCountyFips) > 0) ? this.props.store.app.getColorPalette()[0] : this.props.store.app.getColorPalette()[6]
+                     color: (this.props.store.app.findSigForFips_1951_2023(this.props.store.app.getCountyFips) < 0.10) ? 
+                         (this.props.store.app.findTrendForFips_1951_2023(this.props.store.app.getCountyFips) > 0) ? this.props.store.app.getColorPalette()[0] : this.props.store.app.getColorPalette()[6]
                          : "#000000",
                      shadow: false,
                      marker: { enabled: false, fillColor: "#000000", lineWidth: 2, lineColor: "#000000", radius:2, symbol:"circle" },
                      enableMouseTracking: true
                    }, {
                      id: "series1b",
-                     selected: (!this.props.store.app.getProjectionView && this.props.store.app.findSigForFips_1980_2013(this.props.store.app.getCountyFips) < 0.10) ? true : false,
-                     name: data.years[30]+"-"+data.years[data.years.length-1]+", "+trendDescriptionText()+"trend ("+rateOfChangePerDecade_1980_2013.toFixed(1)+valueSuffix[this.props.store.app.getDisplaySeries]+"/Decade)",
-                     data: fitData_1980_2013,
+                     selected: (!this.props.store.app.getProjectionView && this.props.store.app.findSigForFips_1980_2023(this.props.store.app.getCountyFips) < 0.10) ? true : false,
+                     name: data.years[30]+"-"+data.years[data.years.length-1]+", "+trendDescriptionText()+"trend ("+rateOfChangePerDecade_1980_2023.toFixed(1)+valueSuffix[this.props.store.app.getDisplaySeries]+"/Decade)",
+                     data: fitData_1980_2023,
                      pointStart: (data) ? parseInt(data.years[30],10) : null,
-                     visible: (!this.props.store.app.getProjectionView && this.props.store.app.findSigForFips_1980_2013(this.props.store.app.getCountyFips) < 0.10) ? true : false,
-                     showInLegend: (!this.props.store.app.getProjectionView && this.props.store.app.findSigForFips_1980_2013(this.props.store.app.getCountyFips) < 0.10) ? true : false,
+                     visible: (!this.props.store.app.getProjectionView && this.props.store.app.findSigForFips_1980_2023(this.props.store.app.getCountyFips) < 0.10) ? true : false,
+                     showInLegend: (!this.props.store.app.getProjectionView && this.props.store.app.findSigForFips_1980_2023(this.props.store.app.getCountyFips) < 0.10) ? true : false,
                      type: "line",
                      zIndex: 24,
                      lineWidth: 4,
-                     color: (this.props.store.app.findSigForFips_1980_2013(this.props.store.app.getCountyFips) < 0.10) ?
-                         (this.props.store.app.findTrendForFips_1980_2013(this.props.store.app.getCountyFips) > 0) ? this.props.store.app.getColorPalette()[0] : this.props.store.app.getColorPalette()[6]
+                     color: (this.props.store.app.findSigForFips_1980_2023(this.props.store.app.getCountyFips) < 0.10) ?
+                         (this.props.store.app.findTrendForFips_1980_2023(this.props.store.app.getCountyFips) > 0) ? this.props.store.app.getColorPalette()[0] : this.props.store.app.getColorPalette()[6]
                          : "#000000",
                      shadow: false,
                      marker: { enabled: false, fillColor: "#000000", lineWidth: 2, lineColor: "#000000", radius:2, symbol:"circle" },

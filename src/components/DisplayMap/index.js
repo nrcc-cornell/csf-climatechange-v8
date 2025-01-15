@@ -95,17 +95,17 @@ export default class DisplayMap extends Component {
                         <Control position="bottomleft">
                             <div className="map-year-range">
                                 <button
-                                    className={(app.getTrendStartYear==='1950') ? "map-year-range-button-active" : "map-year-range-button-inactive"}
-                                    onClick={() => {app.updateTrendStartYear('1950')}}
+                                    className={(app.getTrendStartYear==='1951') ? "map-year-range-button-active" : "map-year-range-button-inactive"}
+                                    onClick={() => {app.updateTrendStartYear('1951')}}
                                 >   
-                                    {'1950-2013'}
+                                    {'1951-2023'}
                                 </button> 
                                 &nbsp;
                                 <button
                                     className={(app.getTrendStartYear==='1980') ? "map-year-range-button-active" : "map-year-range-button-inactive"}
                                     onClick={() => {app.updateTrendStartYear('1980')}}
                                 >   
-                                    {'1980-2013'}
+                                    {'1980-2023'}
                                 </button> 
                             </div>
                         </Control>
@@ -124,7 +124,7 @@ export default class DisplayMap extends Component {
                         </Control>
                         <Control position="topright">
                             <div className="map-tooltip">
-                                <div className="map-tooltip-title">{mapTitle[app.getDisplaySeries]}, {app.getTrendStartYear}-2013 Trend</div>
+                                <div className="map-tooltip-title">{mapTitle[app.getDisplaySeries]}, {app.getTrendStartYear}-2023 Trend</div>
                                 <div className="map-tooltip-content">
                                     {app.getMouseoverMessage}
                                 </div>

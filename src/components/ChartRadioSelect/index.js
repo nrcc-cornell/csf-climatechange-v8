@@ -157,9 +157,21 @@ class ChartRadioSelect extends Component {
                     <label className={this.props.store.app.isProjectionLoading ? "label-for-check-loading" : "label-for-check"}>
                       <input
                           type="checkbox"
-                          value="rcp85"
+                          value="ssp585"
                           disabled={this.props.store.app.isProjectionLoading}
-                          checked={this.props.store.app.getProjectionView && this.props.store.app.getModelScenario==="rcp85"}
+                          checked={this.props.store.app.getProjectionView && this.props.store.app.getModelScenario==="ssp585"}
+                          onChange = {this.props.store.app.updateModelScenarioFromCheckbox}
+                      />
+                      {(this.props.store.app.isProjectionLoading) ? "loading data ..." : " Very High Emissions"}
+                    </label>
+                  </div>
+                  <div className="checkbox">
+                    <label className={this.props.store.app.isProjectionLoading ? "label-for-check-loading" : "label-for-check"}>
+                      <input
+                          type="checkbox"
+                          value="ssp370"
+                          disabled={this.props.store.app.isProjectionLoading}
+                          checked={this.props.store.app.getProjectionView && this.props.store.app.getModelScenario==="ssp370"}
                           onChange = {this.props.store.app.updateModelScenarioFromCheckbox}
                       />
                       {(this.props.store.app.isProjectionLoading) ? "loading data ..." : " High Emissions"}
@@ -169,12 +181,12 @@ class ChartRadioSelect extends Component {
                     <label className={this.props.store.app.isProjectionLoading ? "label-for-check-loading" : "label-for-check"}>
                       <input
                           type="checkbox"
-                          value="rcp45"
+                          value="ssp245"
                           disabled={this.props.store.app.isProjectionLoading}
-                          checked={this.props.store.app.getProjectionView && this.props.store.app.getModelScenario==="rcp45"}
+                          checked={this.props.store.app.getProjectionView && this.props.store.app.getModelScenario==="ssp245"}
                           onChange = {this.props.store.app.updateModelScenarioFromCheckbox}
                       />
-                      {(this.props.store.app.isProjectionLoading) ? "loading data ..." : " Low Emissions"}
+                      {(this.props.store.app.isProjectionLoading) ? "loading data ..." : " Intermediate Emissions"}
                     </label>
                   </div>
                 </form>
