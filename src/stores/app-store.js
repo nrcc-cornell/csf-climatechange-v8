@@ -76,13 +76,10 @@ export class AppStore {
                </p>
                <h4><br/>&bull; OBSERVED DATA</h4>
                <p>
-               This tool uses data observed at weather stations from 1951-2023, interpolated to a grid of 1/16° spatial resolution by Livneh et al (2013,2015). The use of this dataset allows for direct comparison of observations with model projections that are also downscaled to the same resolution. Charts show these observations as either black dots or black bars, depending on the variable, and are also overlayed on top of climate projections to provide context for climate model simulations.
+               This tool uses data observed at weather stations from 1951-2023, interpolated to an approximately 4km grid. These data come from NOAA's National Centers for Environmental Information (NCEI) nClimGrid-Daily data set (Durre et al., 2022).
                </p>
                <p>
-               Livneh, B., E. A. Rosenberg, C. Lin, B. Nijssen, V. Mishra, K. M. Andreadis, E. P. Maurer, and D. P. Lettenmaier (2013), A long-term hydrologically based dataset of land surface fluxes and states for the conterminous United States: Update and extensions, J. Clim., 26(23), 9384–9392, doi 10.1175/JCLI-D-12-00508.1.
-               </p>
-               <p>
-               Livneh, B., Bohn, T.J., Pierce, D.W., Munoz-Arriola, F., Nijssen, B., Vose, R., Brekke, L. 2015. A spatially comprehensive, hydrometeorological data set for Mexico, the U.S., and Southern Canada 1951–2023. Scientific Data 2:150042. doi: 10.1038/sdata.2015.42.
+                Durre, I., Arguez, A., Schreck III, C.J., Squires, M.F. and Vose, R.S., 2022. Daily high-resolution temperature and precipitation fields for the contiguous United States from 1951 to present. Journal of Atmospheric and Oceanic Technology, 39(12), pp.1837-1855.
                </p>
                <h4><br/>&bull; TRENDS IN OBSERVED DATA OVER TIME</h4>
                <p>
@@ -90,16 +87,31 @@ export class AppStore {
                </p>
                <h4><br/>&bull; CLIMATE PROJECTIONS</h4>
                <p>
-               Localized Constructed Analogs (LOCA, Pierce et al. 2014) downscaled data from 32 independent climate models are used to show simulated (in the past) and projected (into the future) climate conditions. On charts, a green band indicates the range of these model results, and a dark green line represents the weighted average of the model results. These data are available at 1/16° spatial resolution and daily temporal resolution for the period from 1951 to 2100.
+               Historical observed data are derived from weather station data interpolated to a grid with 1/16° spatial resolution using the methods of Livneh et al (2013,2015) and Pierce et al. (2021). The use of this dataset allows for direct comparison of observations with model projections that are also downscaled to the same resolution. Charts show these observations as either black dots or black bars, depending on the variable, and are also overlayed on top of climate projections to provide context for climate model simulations.
                </p>
                <p>
-               Climate models project conditions for multiple emissions scenarios. This allows us to understand the magnitude of changes we might expect given the range of possible greenhouse gas emissions, depending on human activity, over the next century. Climate projections for two emissions scenarios are provided in this tool:<br/>
+               Localized Constructed Analogs (LOCA, Pierce et al. 2014) downscaled data from 16 independent climate models are used to show simulated (in the past) and projected (into the future) climate conditions. On charts, a green band indicates the range of these model results, and a dark green line represents the weighted average of the model results. These data are available at 1/16° spatial resolution and daily temporal resolution for the period from 1950 to 2100.
                </p>
                <p>
-                   <i>(1) High Emissions</i>: Under this scenario, greenhouse gas emissions and concentrations increase considerably over time, with no mitigation. This is also known as RCP8.5, as defined by the Intergovernmental Panel on Climate Change (IPCC).
+               Climate models project conditions for multiple emissions scenarios. This allows us to understand the magnitude of changes we might expect given the range of possible greenhouse gas emissions, depending on human activity, over the next century. Climate projections for three emissions scenarios are provided in this tool:<br/>
                </p>
                <p>
-                   <i>(2) Low Emissions</i>: Under this scenario, greenhouse gas emissions peak at year 2040 and then level off. This is also known as RCP4.5, as defined by the IPCC.
+                   <i>(1) Very High Emissions</i>: Under this scenario, greenhouse gas emissions and concentrations  continue to increase through most of the century. This is also known as the SSP585 scenario, as defined by the Intergovernmental Panel on Climate Change (IPCC). It was previously referred to as the RCP8.5 scenario.
+               </p>
+               <p>
+                   <i>(2) High Emissions</i>: This scenario is in the upper-middle part of the full range of scenarios. It assumes current additional climate policy. This is also known as the SSP370 scenario, as defined by the Intergovernmental Panel on Climate Change (IPCC).
+               </p>
+               <p>
+                   <i>(1) Low Emissions</i>:  Under this scenario, greenhouse gas emissions gradually shift toward lower levels. This is the current SSP245 emissions scenario as defined by the IPCC.  It was previously referred to as the RCP4.5 scenario.
+               </p>
+               <p>
+               Livneh, B., E. A. Rosenberg, C. Lin, B. Nijssen, V. Mishra, K. M. Andreadis, E. P. Maurer, and D. P. Lettenmaier (2013), A long-term hydrologically based dataset of land surface fluxes and states for the conterminous United States: Update and extensions, J. Clim., 26(23), 9384–9392, doi 10.1175/JCLI-D-12-00508.1.
+               </p>
+               <p>
+               Livneh, B., Bohn, T.J., Pierce, D.W., Munoz-Arriola, F., Nijssen, B., Vose, R., Brekke, L. 2015. A spatially comprehensive, hydrometeorological data set for Mexico, the U.S., and Southern Canada 1950–2013. Scientific Data 2:150042. doi: 10.1038/sdata.2015.42.
+               </p>
+               <p>
+               Pierce, D.W., Su, L., Cayan, D.R., Risser, M.D., Livneh, B. and Lettenmaier, D.P., 2021. An extreme-preserving long-term gridded daily precipitation dataset for the conterminous United States. Journal of Hydrometeorology, 22(7), pp.1883-1895.
                </p>
                <p>
                Pierce, D. W., D. R. Cayan, and B. L. Thrasher, 2014: Statistical Downscaling Using Localized Constructed Analogs (LOCA). Journal of Hydrometeorology, volume 15, 2558-2585. doi: 10.1175/JHM-D-14-0082.1.
